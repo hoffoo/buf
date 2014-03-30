@@ -8,21 +8,21 @@ func TestJoin(t *testing.T) {
     a := New("a")
     b := New("b")
 
-    Join(a, b)
+    a.Join(b)
 
-    if Next(a) != b {
-        t.Error("Next broken")
+    if a.Next() != b {
+        t.Errorf("Next broken")
     }
 
-    if Prev(b) != a {
+    if b.Prev() != a {
         t.Error("Prev broken")
     }
 
-    if Next(b) != nil {
+    if b.Next() != nil {
         t.Error("Next broken")
     }
 
-    if Prev(a) != nil {
+    if a.Prev() != nil {
         t.Error("Prev broken")
     }
 
@@ -31,14 +31,32 @@ func TestJoin(t *testing.T) {
     e := New("e")
     f := New("f")
 
-    Join(b, c, d, e, f)
+    b.Join(c, d, e, f)
 
-    if Next(a) != b || Next(b) != c || Next(c) != d || Next(d) != e || Next(e) != f || Next(f) != nil {
+    if a.Next() != b || b.Next() != c || c.Next() != d || d.Next() != e || e.Next() != f || f.Next() != nil {
         t.Error("Join broken")
     }
 
-    if Prev(f) != e || Prev(e) != d || Prev(d) != c || Prev(c) != b || Prev(b) != a || Prev(a) != nil {
+    if f.Prev() != e || e.Prev() != d || d.Prev() != c || c.Prev() != b || b.Prev() != a || a.Prev() != nil {
         t.Error("Join broken")
     }
 
+    if a.Bottom() != f || b.Bottom() != f || f.Bottom() != f {
+        t.Error("Bottom broken")
+    }
+
+    if f.Top() != a || c.Top() != a || a.Top() !=a {
+        t.Error("Top broken")
+    }
+
+    if a.Len() != 6 || f.Len() != 1 {
+        t.Error("Len broken")
+    }
+
+    g := New("g")
+    a.Append(g)
+
+    if a.Bottom() != g || b.Bottom() != g || g.Bottom() != g {
+        t.Error("Bottom broken")
+    }
 }

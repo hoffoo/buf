@@ -15,15 +15,17 @@ func TestScan(t *testing.T) {
     f := New("f")
     g := New("g")
 
-    Join(a, b, c, d ,e ,f, g)
+    a.Join(b, c, d ,e ,f, g)
 
     expect := []byte{'a'}
-    for a.Scan() == true {
-        if a.Text() != string(expect) {
-            t.Errorf("expected string %s: got %s", string(expect), a.Text())
+
+    scan := NewScanner(a)
+    for scan.Scan() == true {
+        if scan.Text() != string(expect) {
+            t.Errorf("expected string %s: got %s", string(expect), scan.Text())
         }
-        if bytes.Equal(a.Bytes(), expect) == false {
-            t.Errorf("expected []byte %s: got %s", string(expect), a.Text())
+        if bytes.Equal(scan.Bytes(), expect) == false {
+            t.Errorf("expected []byte %s: got %s", string(expect), scan.Text())
         }
         expect[0]++
     }

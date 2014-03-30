@@ -2,51 +2,49 @@ package buf
 
 import "bufio"
 
-type BufScan struct {
-    cursor *Buf
+type BufScanner struct {
+    start  *Buf // first element of buf
+    cursor *Buf // cursor while we are scanning
     err    error
 }
 
-func (b *Buf) Scan() bool {
+func NewScanner(b *Buf) *BufScanner {
+    return &BufScanner{start: b}
+}
 
-    if b.scan == nil {
-        b.scan = &BufScan{cursor: b}
+// Scanner interface for a Buf. TODO split func not implemented.
+// It would add a lot of code if we wanted to split words or \n
+// within a Buf
+func (b *BufScanner) Scan() bool {
+
+    if b.cursor != nil && b.cursor.bdown != nil {
+        b.cursor = b.cursor.bdown
         return true
-    }
-
-    if b.scan.cursor.bdown != nil {
-        b.scan.cursor = b.scan.cursor.bdown
+    } else if b.cursor == nil {
+        b.cursor = b.start
         return true
     }
 
     // we arent scanning anymore
-    b.scan = nil
     return false
 }
 
-func (b *Buf) Bytes() []byte {
-
-    if b.scan == nil {
-        return []byte{}
-    }
-
-    return []byte(b.scan.cursor.data)
+// Current scan data as bytes
+func (b *BufScanner) Bytes() []byte {
+    return []byte(b.cursor.data)
 }
 
-func (b *Buf) Text() string {
-    if b.scan == nil {
-        return ""
-    }
-    return b.scan.cursor.data
+// Current scan data string
+func (b *BufScanner) Text() string {
+    return b.cursor.data
 }
 
-func (b *Buf) Err() error {
-    if b.scan == nil {
-        return nil
-    }
-    return b.scan.err
+// Scan err
+func (b *BufScanner) Err() error {
+    return b.err
 }
 
-func (b *Buf) Split(sfn bufio.SplitFunc) {
+// TODO not implemented
+func (b *BufScanner) Split(sfn bufio.SplitFunc) {
     // we dont split, only scan the buffer
 }
