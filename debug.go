@@ -1,8 +1,8 @@
 package buf
 
-func (b *Buf) Debug() (s string) {
+func (b *Line) Debug() (s string) {
 
-    scan := NewScanner(b)
+    scan := b.NewScanner()
     for scan.Scan() {
         s += "|" + scan.Text() + "|\n"
     }

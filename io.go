@@ -7,13 +7,13 @@ import (
     "bufio"
 )
 
-func ReadIO(in io.Reader) (b *Buf, err error) {
+func ReadIO(in io.Reader) (l *Line, err error) {
     s := bufio.NewScanner(in)
 
     for s.Scan() == true {
 
-        if b == nil {
-            b = &Buf{data: s.Text()}
+        if l == nil {
+            l = &Line{data: s.Text()}
             continue
         }
 
@@ -23,7 +23,7 @@ func ReadIO(in io.Reader) (b *Buf, err error) {
         }
 
         // TODO more efficient rather than append
-        b.Append(&Buf{data: s.Text()})
+        l.Append(&Line{data: s.Text()})
     }
 
     return

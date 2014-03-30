@@ -19,7 +19,7 @@ func TestScan(t *testing.T) {
 
     expect := []byte{'a'}
 
-    scan := NewScanner(a)
+    scan := a.NewScanner()
     for scan.Scan() == true {
         if scan.Text() != string(expect) {
             t.Errorf("expected string %s: got %s", string(expect), scan.Text())

@@ -2,26 +2,26 @@ package buf
 
 import "bufio"
 
-type BufScanner struct {
-    start  *Buf // first element of buf
-    cursor *Buf // cursor while we are scanning
+type LineScanner struct {
+    start  *Line // first element of buf
+    cursor *Line // cursor while we are scanning
     err    error
 }
 
-func NewScanner(b *Buf) *BufScanner {
-    return &BufScanner{start: b}
+func (l *Line) NewScanner() *LineScanner {
+    return &LineScanner{start: l}
 }
 
-// Scanner interface for a Buf. TODO split func not implemented.
+// Scanner interface for a Line. TODO split func not implemented.
 // It would add a lot of code if we wanted to split words or \n
-// within a Buf
-func (b *BufScanner) Scan() bool {
+// within a Line
+func (ls *LineScanner) Scan() bool {
 
-    if b.cursor != nil && b.cursor.bdown != nil {
-        b.cursor = b.cursor.bdown
+    if ls.cursor != nil && ls.cursor.ldown != nil {
+        ls.cursor = ls.cursor.ldown
         return true
-    } else if b.cursor == nil {
-        b.cursor = b.start
+    } else if ls.cursor == nil {
+        ls.cursor = ls.start
         return true
     }
 
@@ -30,21 +30,21 @@ func (b *BufScanner) Scan() bool {
 }
 
 // Current scan data as bytes
-func (b *BufScanner) Bytes() []byte {
-    return []byte(b.cursor.data)
+func (ls *LineScanner) Bytes() []byte {
+    return []byte(ls.cursor.data)
 }
 
 // Current scan data string
-func (b *BufScanner) Text() string {
-    return b.cursor.data
+func (ls *LineScanner) Text() string {
+    return ls.cursor.data
 }
 
 // Scan err
-func (b *BufScanner) Err() error {
-    return b.err
+func (ls *LineScanner) Err() error {
+    return ls.err
 }
 
 // TODO not implemented
-func (b *BufScanner) Split(sfn bufio.SplitFunc) {
+func (ls *LineScanner) Split(sfn bufio.SplitFunc) {
     // we dont split, only scan the buffer
 }
