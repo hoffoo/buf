@@ -6,12 +6,11 @@ package buf
 // not thread safe
 
 type Buf struct {
-    bup    *Buf
-    bdown  *Buf
-    cursor *Buf  // used when scanning
-    serr   error // scanner error
-    data   string
-    offset int   // offset of string during last read
+    bup   *Buf
+    bdown *Buf
+    data  string
+    scan  *BufScan
+    read  *BufRead
 }
 
 func New(data string) *Buf {
@@ -37,10 +36,21 @@ func Delete(b *Buf) {
     }
 }
 
-func Join(u *Buf, d *Buf) {
+func Join(u *Buf, more ...*Buf) {
+
+    if (len(more) == 0) {
+        return
+    }
+
+    d := more[0]
+
     if u.bdown != nil {
-        d.bup = u.bdown
+        d.bdown = u.bdown.bup
+        u.bdown.bup = d
+    } else {
+        d.bup = u
     }
     u.bdown = d
-    d.bup = u
+
+    Join(d, more[1:]...)
 }
