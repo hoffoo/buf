@@ -41,14 +41,6 @@ func TestJoin(t *testing.T) {
         t.Error("Join broken")
     }
 
-    if a.Bottom() != f || b.Bottom() != f || f.Bottom() != f {
-        t.Error("Bottom broken")
-    }
-
-    if f.Top() != a || c.Top() != a || a.Top() !=a {
-        t.Error("Top broken")
-    }
-
     if a.Len() != 6 || f.Len() != 1 {
         t.Error("Len broken")
     }

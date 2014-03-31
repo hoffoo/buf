@@ -5,8 +5,8 @@ package buf
 //
 // not thread safe
 type Line struct {
-    lup   *Line
-    ldown *Line
+    prev   *Line
+    next *Line
     data  string
 }
 
@@ -24,24 +24,24 @@ func (b *Line) String() string {
 
 // Set Next to *Line
 func (l *Line) SetNext(to *Line) {
-    l.ldown = to
-    to.lup = l
+    l.next = to
+    to.prev = l
 }
 
 // Set Prev to *Line
 func (l *Line) SetPrev(to *Line) {
-    l.lup = to
-    to.ldown = l
+    l.prev = to
+    to.next = l
 }
 
 // Next item in the buf
 func (b *Line) Next() *Line {
-    return b.ldown
+    return b.next
 }
 
 // Prev item in the buf
 func (b *Line) Prev() *Line {
-    return b.lup
+    return b.prev
 }
 
 // Count of buffers starting at b to Bottom()
@@ -54,31 +54,13 @@ func (b *Line) Len() (l int) {
     return
 }
 
-// Find the bottom of this buffer
-func (b *Line) Bottom() (*Line) {
-    if bb := b.Next(); bb != nil {
-        return bb.Bottom()
-    }
-
-    return b
-}
-
-// Find the start of this buffer
-func (b *Line) Top() (*Line) {
-    if tb := b.Prev(); tb != nil {
-        return tb.Top()
-    }
-
-    return b
-}
-
 // Delete an item, links the items below and above
 func (b *Line) Delete() {
-    if b.lup != nil {
-        b.lup = b.ldown
+    if b.prev != nil {
+        b.prev = b.next
     }
-    if b.ldown != nil {
-        b.ldown.lup = b.lup
+    if b.next != nil {
+        b.next.prev = b.prev
     }
 }
 
@@ -91,13 +73,13 @@ func (u *Line) Join(more ...*Line) {
 
     d := more[0]
 
-    if u.ldown != nil {
-        d.ldown = u.ldown.lup
-        u.ldown.lup = d
+    if u.next != nil {
+        d.next = u.next.prev
+        u.next.prev = d
     } else {
-        d.lup = u
+        d.prev = u
     }
-    u.ldown = d
+    u.next = d
 
     d.Join(more[1:]...)
 }
@@ -109,6 +91,6 @@ func (u *Line) Join(more ...*Line) {
 // It will of unlink a buf from anything above it since iteration
 // relies on the Prev() method
 func (b *Line) NewMarker() *Line {
-    return &Line{ldown: b}
+    return &Line{next: b}
 }
 

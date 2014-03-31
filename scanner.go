@@ -17,8 +17,8 @@ func (l *Line) NewScanner() *LineScanner {
 // within a Line
 func (ls *LineScanner) Scan() bool {
 
-    if ls.cursor != nil && ls.cursor.ldown != nil {
-        ls.cursor = ls.cursor.ldown
+    if ls.cursor != nil && ls.cursor.next != nil {
+        ls.cursor = ls.cursor.next
         return true
     } else if ls.cursor == nil {
         ls.cursor = ls.start
