@@ -25,11 +25,13 @@ func (b *Line) String() string {
 // Set Next to *Line
 func (l *Line) SetNext(to *Line) {
     l.ldown = to
+    to.lup = l
 }
 
 // Set Prev to *Line
 func (l *Line) SetPrev(to *Line) {
     l.lup = to
+    to.ldown = l
 }
 
 // Next item in the buf

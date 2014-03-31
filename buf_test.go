@@ -54,9 +54,16 @@ func TestJoin(t *testing.T) {
     }
 
     g := New("g")
-    a.Append(g)
 
-    if a.Bottom() != g || b.Bottom() != g || g.Bottom() != g {
-        t.Error("Bottom broken")
+    f.SetNext(g)
+    if g.Next() != nil || f.Next() != g || g.Prev() != f {
+        t.Error("SetNext broken")
+    }
+
+    h := New("h")
+
+    h.SetPrev(g)
+    if h.Next() != nil || h.Prev() != g || g.Next() != h {
+        t.Error("SetPrev broken")
     }
 }
