@@ -73,7 +73,7 @@ func (b *Line) Delete() {
 // Join bufs
 func (u *Line) Join(more ...*Line) {
 
-    if (len(more) == 0) {
+    if (len(more) == 0) || more[0] == nil {
         return
     }
 
