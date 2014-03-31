@@ -22,6 +22,16 @@ func (b *Line) String() string {
     return b.data
 }
 
+// Set Next to *Line
+func (l *Line) SetNext(to *Line) {
+    l.ldown = to
+}
+
+// Set Prev to *Line
+func (l *Line) SetPrev(to *Line) {
+    l.lup = to
+}
+
 // Next item in the buf
 func (b *Line) Next() *Line {
     return b.ldown
@@ -100,8 +110,3 @@ func (b *Line) NewMarker() *Line {
     return &Line{ldown: b}
 }
 
-// Appends to the end of the buffer.
-// TODO remove this because its needlessly inefficient.
-func (b *Line) Append(more ...*Line) {
-    b.Bottom().Join(more...)
-}
