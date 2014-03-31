@@ -84,6 +84,16 @@ func (u *Line) Join(more ...*Line) {
     d.Join(more[1:]...)
 }
 
+// external Join func for convenience
+func Join(more ...*Line) {
+
+    if (len(more) < 2) {
+        return
+    }
+
+    more[0].Join(more[1:]...)
+}
+
 // Make a marker, empty data buf, to keep track this buf.
 // The marker buf element is special because the element below it
 // is not linked. This means that you can call Next() on a marker
