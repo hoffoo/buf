@@ -88,8 +88,6 @@ func (u *Line) Join(more ...*Line) {
 // The marker buf element is special because the element below it
 // is not linked. This means that you can call Next() on a marker
 // to access the data below it, but cannot call Prev() to get to it.
-// It will of unlink a buf from anything above it since iteration
-// relies on the Prev() method
 func (b *Line) NewMarker() *Line {
     return &Line{next: b}
 }
