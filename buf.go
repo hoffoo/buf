@@ -84,7 +84,7 @@ func (u *Line) Join(more ...*Line) {
     d.Join(more[1:]...)
 }
 
-// external Join func for convenience
+// Join func for convenience
 func Join(more ...*Line) *Line {
 
     if len(more) < 2 {
@@ -95,6 +95,7 @@ func Join(more ...*Line) *Line {
     return more[0]
 }
 
+// Join strings to line - create lines for each ss and join
 func (u *Line) JoinString(ss ...string) {
 
     if len(ss) == 0 {
@@ -108,7 +109,8 @@ func (u *Line) JoinString(ss ...string) {
     u.Join(ls...)
 }
 
-// external Join func for strings
+// Join strings to line - create lines for each ass, join, return
+// head line
 func JoinString(ss ...string) *Line {
 
     if len(ss) == 0 {
