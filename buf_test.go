@@ -2,6 +2,7 @@ package buf
 
 import (
     "testing"
+    "strings"
 )
 
 func TestJoin(t *testing.T) {
@@ -57,5 +58,13 @@ func TestJoin(t *testing.T) {
     h.SetPrev(g)
     if h.Next() != nil || h.Prev() != g || g.Next() != h {
         t.Error("SetPrev broken")
+    }
+}
+
+func TestDelete(t *testing.T) {
+    b1 := JoinString(strings.Split("a b c d e f", " ")...)
+
+    if b1.Len() != 6 {
+        t.Error("JoinString broken")
     }
 }

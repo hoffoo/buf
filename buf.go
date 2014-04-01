@@ -1,13 +1,13 @@
 package buf
 
 // Data structure for manupulating line sperated strings.
-// useful for managing line sperated data
+// useful for managing line sperated data.
 //
 // not thread safe
 type Line struct {
-    prev   *Line
+    prev *Line
     next *Line
-    data  string
+    data string
 }
 
 // Make a new buffer containing the data
@@ -18,8 +18,8 @@ func New(data string) *Line {
 }
 
 // Return buf data
-func (b *Line) String() string {
-    return b.data
+func (l *Line) String() string {
+    return l.data
 }
 
 // Set Next to *Line
@@ -35,32 +35,32 @@ func (l *Line) SetPrev(to *Line) {
 }
 
 // Next item in the buf
-func (b *Line) Next() *Line {
-    return b.next
+func (l *Line) Next() *Line {
+    return l.next
 }
 
 // Prev item in the buf
-func (b *Line) Prev() *Line {
-    return b.prev
+func (l *Line) Prev() *Line {
+    return l.prev
 }
 
 // Count of buffers starting at b to Bottom()
-func (b *Line) Len() (l int) {
-    for b != nil {
-        l++
-        b = b.Next()
+func (l *Line) Len() (li int) {
+    for l != nil {
+        li++
+        l = l.Next()
     }
 
     return
 }
 
 // Delete an item, links the items below and above
-func (b *Line) Delete() {
-    if b.prev != nil {
-        b.prev = b.next
+func (l *Line) Delete() {
+    if l.prev != nil {
+        l.prev.next = l.next
     }
-    if b.next != nil {
-        b.next.prev = b.prev
+    if l.next != nil {
+        l.next.prev = l.prev
     }
 }
 
@@ -85,20 +85,45 @@ func (u *Line) Join(more ...*Line) {
 }
 
 // external Join func for convenience
-func Join(more ...*Line) {
+func Join(more ...*Line) *Line {
 
-    if (len(more) < 2) {
-        return
+    if len(more) < 2 {
+        return nil
     }
 
     more[0].Join(more[1:]...)
+    return more[0]
+}
+
+func (u *Line) JoinString(ss ...string) {
+
+    if len(ss) == 0 {
+        return
+    }
+
+    ls := make([]*Line, len(ss))
+    for i := range ss {
+        ls[i] = New(ss[i])
+    }
+    u.Join(ls...)
+}
+
+// external Join func for strings
+func JoinString(ss ...string) *Line {
+
+    if len(ss) == 0 {
+        return nil
+    }
+
+    l := New(ss[0])
+    l.JoinString(ss[1:]...)
+    return l
 }
 
 // Make a marker, empty data buf, to keep track this buf.
 // The marker buf element is special because the element below it
 // is not linked. This means that you can call Next() on a marker
 // to access the data below it, but cannot call Prev() to get to it.
-func (b *Line) NewMarker() *Line {
-    return &Line{next: b}
+func (l *Line) NewMarker() *Line {
+    return &Line{next: l}
 }
-
