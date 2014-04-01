@@ -3,6 +3,8 @@ buf
 
 go linked list of strings 
 
+[![GoDoc](https://godoc.org/github.com/hoffoo/buf?status.png)](https://godoc.org/github.com/hoffoo/buf)
+
 usage
 ===
 
