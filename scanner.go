@@ -2,12 +2,14 @@ package buf
 
 import "bufio"
 
+// Scanner for Lines
 type LineScanner struct {
     start  *Line // first element of buf
     cursor *Line // cursor while we are scanning
     err    error
 }
 
+// Make a new scanner
 func (l *Line) NewScanner() *LineScanner {
     return &LineScanner{start: l}
 }

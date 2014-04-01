@@ -1,6 +1,6 @@
 package buf
 
-func (b *Line) Debug() (s string) {
+func (b *Line) debug() (s string) {
 
     scan := b.NewScanner()
     for scan.Scan() {

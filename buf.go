@@ -1,9 +1,10 @@
-package buf
-
 // Data structure for manupulating line sperated strings.
 // useful for managing line sperated data.
 //
 // not thread safe
+package buf
+
+// Single item of in the list.
 type Line struct {
     prev *Line
     next *Line

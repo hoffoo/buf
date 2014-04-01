@@ -18,6 +18,6 @@ buf3`
     }
 
     if b.String() != "buf1" || b.Next().String() != "buf2" || b.Next().Next().String() != "buf3" || b.Next().Next().Next() != nil {
-        t.Errorf("ReadIO broken, output was: %s", b.Debug())
+        t.Errorf("ReadIO broken, output was: %s", b.debug())
     }
 }
