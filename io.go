@@ -1,14 +1,13 @@
 package buf
 
 // IO utils to create lines
-
 import (
     "io"
     "bufio"
 )
 
 // Read from in, first line is returned, the rest are joined under it.
-// returns error in case of scanner/io err.
+// Returns error in case of scanner/io err.
 func ReadIO(in io.Reader) (l *Line, err error) {
 
     s := bufio.NewScanner(in)
@@ -32,5 +31,6 @@ func scanIO(l *Line, s *bufio.Scanner) {
 
     lnext := &Line{data: s.Text()}
     l.Join(lnext)
+    l.SetNext(lnext)
     scanIO(lnext, s)
 }

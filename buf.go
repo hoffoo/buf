@@ -1,5 +1,5 @@
-// Data structure for manupulating line sperated strings.
-// useful for managing line sperated data.
+// Data structure for manupulating ordered strings.
+// Useful for managing line sperated data.
 //
 // not thread safe
 package buf
@@ -11,16 +11,26 @@ type Line struct {
     data string
 }
 
-// Make a new buffer containing the data
+// Make a new line containing the data
 func New(data string) *Line {
     return &Line{
         data: data,
     }
 }
 
-// Return buf data
+// Return line data
 func (l *Line) String() string {
     return l.data
+}
+
+// Next line
+func (l *Line) Next() *Line {
+    return l.next
+}
+
+// Prev line
+func (l *Line) Prev() *Line {
+    return l.prev
 }
 
 // Set Next to *Line
@@ -35,17 +45,7 @@ func (l *Line) SetPrev(to *Line) {
     to.next = l
 }
 
-// Next item in the buf
-func (l *Line) Next() *Line {
-    return l.next
-}
-
-// Prev item in the buf
-func (l *Line) Prev() *Line {
-    return l.prev
-}
-
-// Count of buffers starting at b to Bottom()
+// Count of lines starting at b to Bottom()
 func (l *Line) Len() (li int) {
     for l != nil {
         li++
@@ -55,7 +55,7 @@ func (l *Line) Len() (li int) {
     return
 }
 
-// Delete an item, links the items below and above
+// Delete a line, links the Next() and Prev() of l to remove this
 func (l *Line) Delete() {
     if l.prev != nil {
         l.prev.next = l.next
@@ -65,27 +65,27 @@ func (l *Line) Delete() {
     }
 }
 
-// Join bufs
-func (u *Line) Join(more ...*Line) {
+// Join lines in the given order
+func (p *Line) Join(more ...*Line) {
 
     if (len(more) == 0) || more[0] == nil {
         return
     }
 
-    d := more[0]
+    n := more[0]
 
-    if u.next != nil {
-        d.next = u.next.prev
-        u.next.prev = d
+    if p.next != nil {
+        n.next = p.next.prev
+        p.next.prev = n
     } else {
-        d.prev = u
+        n.prev = p
     }
-    u.next = d
+    p.next = n
 
-    d.Join(more[1:]...)
+    n.Join(more[1:]...)
 }
 
-// Join func for convenience
+// Join func for convenience - see *Line.Join
 func Join(more ...*Line) *Line {
 
     if len(more) < 2 {
@@ -97,7 +97,7 @@ func Join(more ...*Line) *Line {
 }
 
 // Join strings to line - create lines for each ss and join
-func (u *Line) JoinString(ss ...string) {
+func (p *Line) JoinString(ss ...string) {
 
     if len(ss) == 0 {
         return
@@ -107,10 +107,10 @@ func (u *Line) JoinString(ss ...string) {
     for i := range ss {
         ls[i] = New(ss[i])
     }
-    u.Join(ls...)
+    p.Join(ls...)
 }
 
-// Join strings to line - create lines for each ass, join, return
+// Join strings to line - create line for each in ss, join, return
 // head line
 func JoinString(ss ...string) *Line {
 

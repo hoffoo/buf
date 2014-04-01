@@ -9,14 +9,14 @@ type LineScanner struct {
     err    error
 }
 
-// Make a new scanner
+// Scanner interface for a Line. TODO split func not implemented.
+// It would add a lot of code if we wanted to split words or \n
+// within a Line
 func (l *Line) NewScanner() *LineScanner {
     return &LineScanner{start: l}
 }
 
-// Scanner interface for a Line. TODO split func not implemented.
-// It would add a lot of code if we wanted to split words or \n
-// within a Line
+// Advance scanner
 func (ls *LineScanner) Scan() bool {
 
     if ls.cursor != nil && ls.cursor.next != nil {
