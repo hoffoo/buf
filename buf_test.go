@@ -3,7 +3,31 @@ package buf
 import (
     "testing"
     "strings"
+    "bytes"
 )
+
+func TestNew(t *testing.T) {
+    data := strings.Split("a b c d e f g", " ")
+
+    b := New(data...)
+
+    if b.Len() != 7 {
+        t.Error("New broken")
+    }
+
+    // test that the right data is in there with a scanner
+    expect := []byte{'a'}
+    scan := b.NewScanner()
+    for scan.Scan() == true {
+        if scan.Text() != string(expect) {
+            t.Errorf("expected string %s: got %s", string(expect), scan.Text())
+        }
+        if bytes.Equal(scan.Bytes(), expect) == false {
+            t.Errorf("expected []byte %s: got %s", string(expect), scan.Text())
+        }
+        expect[0]++
+    }
+}
 
 func TestJoin(t *testing.T) {
     a := New("a")
@@ -66,5 +90,29 @@ func TestDelete(t *testing.T) {
 
     if b1.Len() != 6 {
         t.Error("JoinString broken")
+    }
+}
+
+func TestGet(t *testing.T) {
+    b1 := JoinString(strings.Split("a b c d e f", " ")...)
+
+    if b1.Get(2).String() != "c" {
+        t.Error("Get failed")
+    }
+
+    if b1.Get(100) != nil {
+        t.Error("Get failed")
+    }
+}
+
+func TestFirstLast(t *testing.T) {
+    b1 := JoinString(strings.Split("a b c d e f", " ")...)
+
+    if b1.First().String() != "a" {
+        t.Error("First failed")
+    }
+
+    if b1.Last().String() != "f" {
+        t.Error("Last failed")
     }
 }

@@ -12,10 +12,19 @@ type Line struct {
 }
 
 // Make a new line containing the data
-func New(data string) *Line {
-    return &Line{
-        data: data,
+func New(data ...string) *Line {
+
+    if len(data) == 0 {
+        return nil
     }
+
+    l := &Line{
+        data: data[0],
+    }
+
+    l.JoinString(data[1:]...)
+
+    return l
 }
 
 // Return line data
@@ -33,6 +42,24 @@ func (l *Line) Prev() *Line {
     return l.prev
 }
 
+// First line
+func (l *Line) First() *Line {
+    if l.Prev() == nil {
+        return l
+    }
+
+    return l.Prev().First()
+}
+
+// Last line
+func (l *Line) Last() *Line {
+    if l.Next() == nil {
+        return l
+    }
+
+    return l.Next().Last()
+}
+
 // Set Next to *Line
 func (l *Line) SetNext(to *Line) {
     l.next = to
@@ -43,6 +70,20 @@ func (l *Line) SetNext(to *Line) {
 func (l *Line) SetPrev(to *Line) {
     l.prev = to
     to.next = l
+}
+
+// Get a line by index
+func (l *Line) Get(idx int) *Line {
+
+    if idx == 0 {
+        return l
+    }
+
+    if l.Next() == nil {
+        return nil
+    }
+
+    return l.Next().Get(idx-1)
 }
 
 // Count of lines starting at b to Bottom()
